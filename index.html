@@ -12,17 +12,35 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        /* Custom Scrollbar for compact spaces */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
         .fade-in { animation: fadeIn 0.2s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
         
-        .selected-nav { background-color: #f1f5f9; border-left: 3px solid #00095B; }
-        .nav-item { border-left: 3px solid transparent; }
+        /* Ford Colors & Custom Palette */
+        :root {
+            --ford-blue: #003478;
+            --col-green: #02b547;
+            --col-red: #dc2626;
+            --col-blue: #2576fe;
+            --col-orange: #fb5d01;
+        }
+
+        /* Active Nav State - Styled like a selected card */
+        .selected-nav { 
+            border: 1px solid var(--ford-blue) !important; 
+            background-color: #f8fafc;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        /* Card transition styles */
+        .nav-card {
+            transition: all 0.2s ease;
+        }
 
         /* Transparent background for embedding */
         body { background-color: transparent; }
@@ -30,97 +48,151 @@
 </head>
 <body class="font-sans text-slate-800 p-4 min-h-screen flex items-center justify-center">
 
-    <!-- WIDGET CONTAINER 
-         - max-w-3xl: Matches your "Global Team Sync" widget width
-         - h-[320px]: Fixed compact height (approx 300px min)
-    -->
-    <div class="w-full max-w-3xl bg-white rounded-lg shadow-sm border border-slate-200 flex overflow-hidden h-[320px]">
+    <!-- WIDGET CONTAINER -->
+    <div class="w-full max-w-3xl bg-white rounded-lg shadow-sm border border-slate-200 flex overflow-hidden h-[300px] relative">
         
-        <!-- LEFT SIDEBAR: Navigation (Narrower: w-52 / ~200px) -->
-        <div class="w-52 bg-white border-r border-slate-100 flex flex-col shrink-0 z-10">
+        <!-- LEFT SIDEBAR: Navigation -->
+        <div class="w-48 bg-white border-r border-slate-100 flex flex-col shrink-0 z-10">
             
-            <!-- Compact Header -->
-            <div class="p-3 border-b border-slate-100 bg-slate-50/50">
+            <!-- Header -->
+            <div class="p-2 border-b border-slate-100 bg-[#003478]">
                 <div class="flex items-center gap-1.5 mb-0.5">
-                    <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-[#00095B]"></i>
-                    <h2 class="text-xs font-bold text-[#00095B] uppercase tracking-wide">Hot List</h2>
+                    <i data-lucide="clipboard-list" class="w-3 h-3 text-white"></i>
+                    <h2 class="text-[10px] font-bold text-white uppercase tracking-wide">Hot List</h2>
                 </div>
-                <p class="text-[10px] text-slate-500 font-medium truncate">User: 882 • Interior Trim</p>
+                <p class="text-[9px] text-blue-100 font-medium truncate">User: 882 • Interior Trim</p>
             </div>
 
-            <!-- Compact Nav Items -->
-            <div class="flex-1 overflow-y-auto custom-scroll p-1.5 space-y-0.5">
+            <!-- Nav Items (Styled as Cards) -->
+            <div class="flex-1 overflow-y-auto custom-scroll p-1.5 space-y-1 bg-slate-50/50">
                 
-                <button onclick="filterList('critical')" id="btn-critical" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="siren" class="w-3.5 h-3.5 text-red-600"></i>
-                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-red-700">Line Stop</span>
+                <!-- Critical (Red) -->
+                <button onclick="filterList('critical')" id="btn-critical" class="nav-card w-full text-left p-1.5 rounded border border-slate-200 bg-white hover:border-red-300 transition-all group flex flex-col gap-1 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-0.5 h-full bg-[#dc2626] rounded-r"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#dc2626]">Line Stop</span>
+                        <!-- Solid Red Circle, White Icon -->
+                        <div class="w-4 h-4 rounded-full bg-[#dc2626] text-white flex items-center justify-center shadow-sm">
+                            <i data-lucide="siren" class="w-2.5 h-2.5"></i>
+                        </div>
                     </div>
-                    <span class="bg-red-100 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">1</span>
+                    <div class="flex items-baseline gap-1">
+                         <span class="text-sm font-bold text-slate-800">1</span>
+                         <span class="text-[9px] text-[#dc2626] font-medium">Critical</span>
+                    </div>
                 </button>
 
-                <button onclick="filterList('atRisk')" id="btn-atRisk" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-orange-500"></i>
-                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-orange-600">Exceptions</span>
+                <!-- Exceptions (Orange) -->
+                <button onclick="filterList('atRisk')" id="btn-atRisk" class="nav-card w-full text-left p-1.5 rounded border border-slate-200 bg-white hover:border-orange-300 transition-all group flex flex-col gap-1 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-0.5 h-full bg-[#fb5d01] rounded-r"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#fb5d01]">Exceptions</span>
+                        <!-- Solid Orange Circle, White Icon -->
+                        <div class="w-4 h-4 rounded-full bg-[#fb5d01] text-white flex items-center justify-center shadow-sm">
+                            <i data-lucide="alert-triangle" class="w-2.5 h-2.5"></i>
+                        </div>
                     </div>
-                    <span class="bg-orange-100 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                    <div class="flex items-baseline gap-1">
+                         <span class="text-sm font-bold text-slate-800">3</span>
+                         <span class="text-[9px] text-[#fb5d01] font-medium">Risk</span>
+                    </div>
                 </button>
 
-                <button onclick="filterList('inTransit')" id="btn-inTransit" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="container" class="w-3.5 h-3.5 text-[#2D96CD]"></i>
-                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-[#2D96CD]">Freight</span>
+                <!-- Freight (Blue) -->
+                <button onclick="filterList('inTransit')" id="btn-inTransit" class="nav-card w-full text-left p-1.5 rounded border border-slate-200 bg-white hover:border-blue-300 transition-all group flex flex-col gap-1 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-0.5 h-full bg-[#2576fe] rounded-r"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#2576fe]">Freight</span>
+                        <!-- Solid Blue Circle, White Icon -->
+                        <div class="w-4 h-4 rounded-full bg-[#2576fe] text-white flex items-center justify-center shadow-sm">
+                            <i data-lucide="truck" class="w-2.5 h-2.5"></i>
+                        </div>
                     </div>
-                    <span class="bg-blue-50 text-blue-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">18</span>
+                    <div class="flex items-baseline gap-1">
+                         <span class="text-sm font-bold text-slate-800">18</span>
+                         <span class="text-[9px] text-slate-400 font-medium">Inbound</span>
+                    </div>
                 </button>
                 
-                 <button onclick="filterList('onTime')" id="btn-onTime" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="file-check" class="w-3.5 h-3.5 text-green-600"></i>
-                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-green-600">Active POs</span>
+                 <!-- Active POs (Green) -->
+                 <button onclick="filterList('onTime')" id="btn-onTime" class="nav-card w-full text-left p-1.5 rounded border border-slate-200 bg-white hover:border-emerald-300 transition-all group flex flex-col gap-1 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-0.5 h-full bg-[#02b547] rounded-r"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#02b547]">Active POs</span>
+                        <!-- Solid Green Circle, White Icon -->
+                        <div class="w-4 h-4 rounded-full bg-[#02b547] text-white flex items-center justify-center shadow-sm">
+                            <i data-lucide="file-check" class="w-2.5 h-2.5"></i>
+                        </div>
                     </div>
-                    <span class="bg-slate-100 text-slate-600 text-[9px] font-bold px-1.5 py-0.5 rounded-full">124</span>
+                    <div class="flex items-baseline gap-1">
+                         <span class="text-sm font-bold text-slate-800">124</span>
+                         <span class="text-[9px] text-slate-400 font-medium">On Plan</span>
+                    </div>
                 </button>
             </div>
             
-            <!-- Tiny Footer -->
-            <div class="p-2 border-t border-slate-100 bg-slate-50/50 text-center">
-                <button class="text-[10px] font-medium text-[#00095B] hover:underline flex items-center justify-center gap-1 w-full">
-                    CMMS <i data-lucide="external-link" class="w-3 h-3"></i>
+            <!-- Footer -->
+            <div class="p-1.5 border-t border-slate-100 bg-white text-center">
+                <button class="text-[9px] font-medium text-[#003478] hover:underline flex items-center justify-center gap-1 w-full">
+                    CMMS <i data-lucide="external-link" class="w-2.5 h-2.5"></i>
                 </button>
             </div>
         </div>
 
         <!-- RIGHT PANE: Content List -->
-        <div class="flex-1 bg-white flex flex-col min-w-0">
+        <div class="flex-1 bg-white flex flex-col min-w-0 relative">
             
-            <!-- Compact Header -->
-            <div class="h-10 border-b border-slate-100 px-4 flex justify-between items-center bg-white sticky top-0 z-20">
+            <!-- Header -->
+            <div class="h-8 border-b border-slate-100 px-3 flex justify-between items-center bg-white sticky top-0 z-20">
                 <div class="flex items-baseline gap-2 overflow-hidden">
-                    <h3 id="list-title" class="font-bold text-slate-800 text-xs whitespace-nowrap">Critical Items</h3>
-                    <p id="list-subtitle" class="text-[10px] text-slate-400 truncate">High priority shortages</p>
+                    <h3 id="list-title" class="font-bold text-[#003478] text-xs whitespace-nowrap">Critical Items</h3>
+                    <p id="list-subtitle" class="text-[9px] text-slate-400 truncate">High priority shortages</p>
                 </div>
                 <div class="flex gap-1 shrink-0">
-                    <button class="p-1 text-slate-400 hover:text-[#00095B] hover:bg-slate-100 rounded" title="Export">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <button class="p-0.5 text-slate-400 hover:text-[#003478] hover:bg-slate-50 rounded transition-colors" title="Export">
+                        <i data-lucide="download" class="w-3 h-3"></i>
                     </button>
-                    <button class="p-1 text-slate-400 hover:text-[#00095B] hover:bg-slate-100 rounded" title="Refresh">
-                        <i data-lucide="refresh-ccw" class="w-3.5 h-3.5"></i>
+                    <button class="p-0.5 text-slate-400 hover:text-[#003478] hover:bg-slate-50 rounded transition-colors" title="Refresh">
+                        <i data-lucide="refresh-ccw" class="w-3 h-3"></i>
                     </button>
                 </div>
             </div>
 
             <!-- List Content -->
-            <div id="list-container" class="flex-1 overflow-y-auto custom-scroll p-2 space-y-2">
+            <div id="list-container" class="flex-1 overflow-y-auto custom-scroll p-1.5 space-y-1">
                 <!-- Content injected via JS -->
             </div>
+
+            <!-- DETAIL OVERLAY (Hidden by default) -->
+            <div id="detailOverlay" class="absolute inset-0 bg-white z-30 transform translate-x-full transition-transform duration-300 flex flex-col">
+                <!-- Overlay Header -->
+                <div class="h-8 border-b border-slate-100 bg-slate-50 px-3 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <button onclick="closeDetail()" class="text-slate-500 hover:text-[#003478]">
+                            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <span class="text-xs font-bold text-slate-700">Item Details</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="text-[9px] bg-[#003478] text-white px-2 py-0.5 rounded hover:bg-blue-900 transition-colors">
+                            Open in SAP
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Overlay Content -->
+                <div id="overlayContent" class="p-3 overflow-y-auto flex-1 text-sm">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // --- DATA ---
+        // Colors: red (#dc2626), orange (#fb5d01), blue (#2576fe), green (#02b547)
         const listData = {
             critical: {
                 title: "Line Stoppage Risks",
@@ -132,7 +204,13 @@
                         supplier: "Lear Corp (Spain)", 
                         status: "HELD - ROTTERDAM", 
                         impact: "Line Stop: 48hrs",
-                        color: "red"
+                        color: "red",
+                        details: {
+                            quantity: "4,500 Units",
+                            container: "MSKU-992811",
+                            lastUpdate: "Today, 08:30 AM",
+                            contact: "Maria Garcia (Lear Log.)"
+                        }
                     }
                 ]
             },
@@ -146,7 +224,8 @@
                         supplier: "ABC Fasteners", 
                         status: "Weather Delay (+12h)", 
                         impact: "Low Stock",
-                        color: "orange"
+                        color: "orange",
+                        details: { quantity: "12 boxes", container: "AIR-FRT-99", lastUpdate: "Yesterday", contact: "John Smith" }
                     },
                     { 
                         id: "SH-105", 
@@ -154,7 +233,8 @@
                         supplier: "Magna Seating", 
                         status: "Customs Hold", 
                         impact: "ETA: Pending",
-                        color: "orange"
+                        color: "orange",
+                         details: { quantity: "20 Pallets", container: "TRK-882", lastUpdate: "Today, 10:00 AM", contact: "Customs Broker A" }
                     },
                      { 
                         id: "RL-882", 
@@ -162,7 +242,8 @@
                         supplier: "Metalsa", 
                         status: "Maintenance", 
                         impact: "ETA: +6h",
-                        color: "orange"
+                        color: "orange",
+                        details: { quantity: "Rail Car #882", container: "N/A", lastUpdate: "Today, 06:00 AM", contact: "CSX Dispatch" }
                     }
                 ]
             },
@@ -176,7 +257,8 @@
                         supplier: "Magna", 
                         status: "HMM Algeciras", 
                         impact: "ETA: 2 Days",
-                        color: "blue"
+                        color: "blue",
+                        details: { quantity: "500 Sets", container: "HMM-221", lastUpdate: "In Transit", contact: "Magna Logistics" }
                     },
                     { 
                         id: "TR-9923", 
@@ -184,7 +266,8 @@
                         supplier: "Visteon", 
                         status: "ONE Apus", 
                         impact: "ETA: 5 Days",
-                        color: "blue"
+                        color: "blue",
+                        details: { quantity: "2,000 Units", container: "ONE-551", lastUpdate: "In Transit", contact: "Visteon Global" }
                     },
                     { 
                         id: "TR-4412", 
@@ -192,15 +275,8 @@
                         supplier: "Yanfeng", 
                         status: "Customs Cleared", 
                         impact: "ETA: 1 Day",
-                        color: "blue"
-                    },
-                    { 
-                        id: "TR-5501", 
-                        part: "Wiring Harness A", 
-                        supplier: "Aptiv", 
-                        status: "Rail - Chicago", 
-                        impact: "ETA: 3 Days",
-                        color: "blue"
+                        color: "blue",
+                        details: { quantity: "800 Units", container: "TRK-991", lastUpdate: "Arrived Port", contact: "Yanfeng US" }
                     }
                 ]
             },
@@ -208,11 +284,9 @@
                 title: "Active POs",
                 subtitle: "Standard flow",
                 items: [
-                     { id: "PO-55291", part: "Instrument Clusters", supplier: "Visteon", status: "Production", impact: "On Schedule", color: "green" },
-                     { id: "PO-55294", part: "Door Panels (XLT)", supplier: "Yanfeng", status: "Shipped", impact: "On Schedule", color: "green" },
-                     { id: "PO-55298", part: "Carpet Sets", supplier: "IAC Group", status: "Production", impact: "On Schedule", color: "green" },
-                     { id: "PO-55301", part: "Headliners", supplier: "Grupo Antolin", status: "Staging", impact: "On Schedule", color: "green" },
-                     { id: "PO-55310", part: "Pillar Trim A/B", supplier: "Yanfeng", status: "Production", impact: "On Schedule", color: "green" }
+                     { id: "PO-55291", part: "Instrument Clusters", supplier: "Visteon", status: "Production", impact: "On Schedule", color: "green", details: { quantity: "10k", container: "N/A", lastUpdate: "On Plan", contact: "Visteon" } },
+                     { id: "PO-55294", part: "Door Panels (XLT)", supplier: "Yanfeng", status: "Shipped", impact: "On Schedule", color: "green", details: { quantity: "5k", container: "N/A", lastUpdate: "Shipped", contact: "Yanfeng" } },
+                     { id: "PO-55298", part: "Carpet Sets", supplier: "IAC Group", status: "Production", impact: "On Schedule", color: "green", details: { quantity: "2k", container: "N/A", lastUpdate: "On Plan", contact: "IAC" } }
                 ]
             }
         };
@@ -229,65 +303,145 @@
             subtitleEl.textContent = data.subtitle;
 
             // Update Navigation Styles
-            document.querySelectorAll('.nav-item').forEach(el => {
+            document.querySelectorAll('.nav-card').forEach(el => {
                 el.classList.remove('selected-nav');
-                el.classList.add('border-transparent');
+                el.classList.add('border-slate-200');
             });
             const activeBtn = document.getElementById(`btn-${category}`);
             activeBtn.classList.add('selected-nav');
-            activeBtn.classList.remove('border-transparent');
+            activeBtn.classList.remove('border-slate-200');
 
             // Render Items
             container.innerHTML = data.items.map((item, index) => {
                 let badgeClass = "";
                 let icon = "";
-                
+                let textColor = "";
+                let borderColor = "";
+
+                // Color Mapping for List Items
                 if (item.color === 'red') {
-                    badgeClass = "bg-red-50 text-red-700 border-red-100";
+                    // #dc2626
+                    badgeClass = "bg-[#dc2626]/10 text-[#dc2626] border-[#dc2626]/20";
+                    textColor = "text-[#dc2626]";
+                    borderColor = "hover:border-[#dc2626]";
                     icon = "siren";
                 } else if (item.color === 'orange') {
-                    badgeClass = "bg-orange-50 text-orange-700 border-orange-100";
+                    // #fb5d01
+                    badgeClass = "bg-[#fb5d01]/10 text-[#fb5d01] border-[#fb5d01]/20";
+                    textColor = "text-[#fb5d01]";
+                    borderColor = "hover:border-[#fb5d01]";
                     icon = "alert-circle";
                 } else if (item.color === 'blue') {
-                    badgeClass = "bg-blue-50 text-blue-700 border-blue-100";
-                    icon = "ship";
+                    // #2576fe
+                    badgeClass = "bg-[#2576fe]/10 text-[#2576fe] border-[#2576fe]/20";
+                    textColor = "text-[#2576fe]";
+                    borderColor = "hover:border-[#2576fe]";
+                    icon = "truck";
                 } else {
-                    badgeClass = "bg-green-50 text-green-700 border-green-100";
-                    icon = "check-circle-2";
+                    // #02b547
+                    badgeClass = "bg-[#02b547]/10 text-[#02b547] border-[#02b547]/20";
+                    textColor = "text-[#02b547]";
+                    borderColor = "hover:border-[#02b547]";
+                    icon = "file-check";
                 }
 
+                const itemDataStr = encodeURIComponent(JSON.stringify(item));
+
                 return `
-                <div class="bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:shadow-md transition-all fade-in flex items-center justify-between group cursor-pointer" style="animation-delay: ${index * 0.05}s">
-                    <div class="flex items-start gap-3 min-w-0">
-                        <div class="mt-0.5 p-1.5 rounded-full ${badgeClass} border shrink-0">
-                            <i data-lucide="${icon}" class="w-3 h-3"></i>
+                <div onclick="openDetail('${itemDataStr}')" class="bg-white p-1.5 rounded border border-slate-200 shadow-sm hover:shadow-md ${borderColor} transition-all fade-in flex items-center justify-between group cursor-pointer" style="animation-delay: ${index * 0.05}s">
+                    <div class="flex items-start gap-2 min-w-0">
+                        <div class="mt-0.5 p-1 rounded-full ${badgeClass} border shrink-0">
+                            <i data-lucide="${icon}" class="w-2.5 h-2.5"></i>
                         </div>
                         <div class="min-w-0">
-                            <div class="flex items-center gap-2 mb-0.5">
-                                <h4 class="font-bold text-xs text-slate-800 truncate">${item.part}</h4>
+                            <div class="flex items-center gap-1.5 mb-0.5">
+                                <h4 class="font-bold text-[11px] text-slate-800 truncate group-hover:text-[#003478] transition-colors">${item.part}</h4>
                                 <span class="text-[9px] font-mono bg-slate-100 text-slate-500 px-1 rounded shrink-0">${item.id}</span>
                             </div>
-                            <div class="flex items-center gap-2 text-[10px] text-slate-500">
-                                <span class="truncate">${item.supplier}</span>
-                                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                                <span class="font-medium ${item.color === 'red' ? 'text-red-600' : 'text-slate-600'} truncate">
+                            <div class="flex items-center gap-1.5 text-[9px] text-slate-500">
+                                <span class="truncate max-w-[80px]">${item.supplier}</span>
+                                <span class="w-0.5 h-0.5 rounded-full bg-slate-300"></span>
+                                <span class="font-medium ${textColor} truncate">
                                     ${item.status}
                                 </span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="text-right flex flex-col items-end gap-1 shrink-0 pl-2">
-                         <span class="text-[9px] font-bold uppercase tracking-wide ${item.color === 'red' ? 'text-red-600 bg-red-50 px-1.5 py-0.5 rounded' : 'text-slate-400'}">
+                    <div class="text-right flex flex-col items-end gap-0.5 shrink-0 pl-1">
+                         <span class="text-[8px] font-bold uppercase tracking-wide ${textColor} ${badgeClass.split(' ')[0]} px-1 py-px rounded">
                             ${item.impact}
                          </span>
-                         <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-300 group-hover:text-[#00095B] transition-colors"></i>
+                         <i data-lucide="chevron-right" class="w-3 h-3 text-slate-300 group-hover:text-[#003478] transition-colors"></i>
                     </div>
                 </div>
                 `;
             }).join('');
             
             lucide.createIcons();
+        }
+
+        // --- DETAIL VIEW FUNCTIONS ---
+        function openDetail(dataStr) {
+            const item = JSON.parse(decodeURIComponent(dataStr));
+            const overlay = document.getElementById('detailOverlay');
+            const content = document.getElementById('overlayContent');
+            
+            // Map colors for detail view
+            let colorHex = "#003478";
+            if(item.color === 'red')    colorHex = "#dc2626";
+            if(item.color === 'orange') colorHex = "#fb5d01";
+            if(item.color === 'blue')   colorHex = "#2576fe";
+            if(item.color === 'green')  colorHex = "#02b547";
+
+            content.innerHTML = `
+                <div class="mb-3">
+                    <span class="text-[9px] font-mono bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded mb-1 inline-block">${item.id}</span>
+                    <h2 class="text-base font-bold text-slate-800 leading-tight mb-0.5">${item.part}</h2>
+                    <p class="text-[10px] text-slate-500">${item.supplier}</p>
+                </div>
+                
+                <div class="bg-slate-50 rounded p-2 mb-3 border border-slate-100">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-[10px] text-slate-500">Status</span>
+                        <span class="text-[10px] font-bold" style="color: ${colorHex}">${item.status}</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                        <div class="h-full" style="width: ${item.color === 'green' ? '100%' : '60%'}; background-color: ${colorHex}"></div>
+                    </div>
+                    <p class="text-[9px] text-right text-slate-400 mt-1">Updated: ${item.details.lastUpdate}</p>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-[10px] text-slate-500">Impact</span>
+                        <span class="text-[10px] font-medium text-slate-800">${item.impact}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-[10px] text-slate-500">Quantity</span>
+                        <span class="text-[10px] font-medium text-slate-800">${item.details.quantity}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-[10px] text-slate-500">Container ID</span>
+                        <span class="text-[10px] font-medium text-slate-800 font-mono">${item.details.container}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                        <span class="text-[10px] text-slate-500">Contact</span>
+                        <span class="text-[10px] font-medium text-[#003478] underline cursor-pointer">${item.details.contact}</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex gap-2">
+                    <button class="flex-1 bg-white border border-slate-300 text-slate-700 py-1.5 rounded text-[10px] font-bold hover:bg-slate-50">EMAIL</button>
+                    <button class="flex-1 bg-white border border-slate-300 text-slate-700 py-1.5 rounded text-[10px] font-bold hover:bg-slate-50">CALL</button>
+                </div>
+            `;
+            
+            overlay.classList.remove('translate-x-full');
+        }
+
+        function closeDetail() {
+            document.getElementById('detailOverlay').classList.add('translate-x-full');
         }
 
         // Initialize with Critical items
