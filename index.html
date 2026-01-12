@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ford Logistics Command Center</title>
+    <title>Ford Logistics - Planner View</title>
     
     <!-- Tailwind CSS (Styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,46 +33,46 @@
         <!-- KPI Strip -->
         <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 border-b border-slate-100 bg-white">
             
-            <!-- KPI: On Time -->
+            <!-- KPI: Active POs -->
             <div onclick="openModal('onTime')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group hover:bg-slate-50">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-green-50 border-green-100 text-green-600 group-hover:bg-green-100 transition-colors">
-                    <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                    <i data-lucide="file-check" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">On Time</p>
-                    <p class="text-2xl font-bold text-slate-800">1,248</p>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">Active POs</p>
+                    <p class="text-2xl font-bold text-slate-800">124</p>
                 </div>
             </div>
 
             <!-- KPI: In Transit -->
             <div onclick="openModal('inTransit')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group hover:bg-slate-50">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-blue-50 border-blue-100 text-[#2D96CD] group-hover:bg-blue-100 transition-colors">
-                    <i data-lucide="ship" class="w-6 h-6"></i>
+                    <i data-lucide="container" class="w-6 h-6"></i>
                 </div>
                 <div>
                     <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">In Transit</p>
-                    <p class="text-2xl font-bold text-slate-800">432</p>
+                    <p class="text-2xl font-bold text-slate-800">18</p>
                 </div>
             </div>
 
-            <!-- KPI: At Risk -->
+            <!-- KPI: Exceptions -->
             <div onclick="openModal('atRisk')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group hover:bg-slate-50">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-orange-50 border-orange-100 text-orange-600 group-hover:bg-orange-100 transition-colors">
-                    <i data-lucide="box" class="w-6 h-6"></i>
+                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">At Risk</p>
-                    <p class="text-2xl font-bold text-slate-800">12</p>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">Exceptions</p>
+                    <p class="text-2xl font-bold text-slate-800">3</p>
                 </div>
             </div>
 
-            <!-- KPI: Critical -->
+            <!-- KPI: Critical Line Stop -->
             <div onclick="openModal('critical')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group bg-red-50/30 hover:bg-red-50/50 border-l-4 border-l-[#D92C25] md:border-l-0">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-red-100 border-red-200 text-[#D92C25] animate-pulse">
-                    <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                    <i data-lucide="siren" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <p class="text-[11px] text-[#D92C25] uppercase tracking-widest font-bold">Critical</p>
+                    <p class="text-[11px] text-[#D92C25] uppercase tracking-widest font-bold">Line Stop Risk</p>
                     <p class="text-2xl font-bold text-[#D92C25]">1</p>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                 <div id="modalHeader" class="px-6 py-4 border-b flex justify-between items-center bg-slate-50">
                     <div>
                         <h3 id="modalTitle" class="font-bold text-lg text-slate-700">Category Title</h3>
-                        <p class="text-xs text-slate-500 mt-1">Real-time manifest data</p>
+                        <p class="text-xs text-slate-500 mt-1">Filtered by: <span class="font-mono bg-slate-200 px-1 rounded">USER_ID_882</span></p>
                     </div>
                     <button onclick="closeModal()" class="p-2 hover:bg-white/50 rounded-full transition-colors">
                         <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
@@ -110,21 +110,21 @@
             <div class="flex justify-between items-end mb-4">
                 <div>
                     <div class="flex items-center gap-2 mb-1">
-                        <i data-lucide="globe" class="w-4 h-4 text-[#2D96CD]"></i>
-                        <h2 class="text-lg font-bold text-[#00095B] tracking-tight">Global Network Intelligence</h2>
+                        <i data-lucide="clipboard-list" class="w-4 h-4 text-[#2D96CD]"></i>
+                        <h2 class="text-lg font-bold text-[#00095B] tracking-tight">My Watchlist: F-150 Interior Trim</h2>
                     </div>
-                    <p class="text-xs text-slate-500 font-medium">Live satellite tracking of Tier 1 supply chain.</p>
+                    <p class="text-xs text-slate-500 font-medium">Tracking your managed suppliers and inbound freight.</p>
                 </div>
                 
                 <!-- Legend -->
                 <div class="flex gap-3">
                     <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md shadow-sm border border-slate-200">
                         <span class="w-2 h-2 rounded-full bg-[#3E8D62] shadow-[0_0_8px_rgba(62,141,98,0.6)]"></span> 
-                        <span class="text-xs font-semibold text-slate-600">Optimal</span>
+                        <span class="text-xs font-semibold text-slate-600">On Track</span>
                     </div>
                     <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md shadow-sm border border-slate-200">
                         <span class="w-2 h-2 rounded-full bg-[#D92C25] animate-pulse shadow-[0_0_8px_rgba(217,44,37,0.6)]"></span> 
-                        <span class="text-xs font-semibold text-slate-600">Disruption</span>
+                        <span class="text-xs font-semibold text-slate-600">Requires Action</span>
                     </div>
                 </div>
             </div>
@@ -153,11 +153,7 @@
 
                 <!-- Map UI -->
                 <div class="absolute bottom-4 left-6 text-white/50 font-mono text-[10px]">
-                    LAT: 51.9244° N <br/> LON: 4.4777° E
-                </div>
-                <div class="absolute top-4 right-6 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-green-400 font-mono text-[10px] tracking-wider">LIVE FEED</span>
+                    DESTINATION: DEARBORN ASSEMBLY
                 </div>
             </div>
             
@@ -170,8 +166,8 @@
                         <div>
                             <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Route Atlantic</h4>
                             <div class="flex items-center gap-2 text-[#00095B]">
-                                <i data-lucide="ship" class="w-4 h-4"></i>
-                                <span class="text-sm font-bold">HMM Algeciras</span>
+                                <i data-lucide="package-check" class="w-4 h-4"></i>
+                                <span class="text-sm font-bold">Seat Foam (Magna)</span>
                             </div>
                         </div>
                         <div class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded">ON TIME</div>
@@ -187,8 +183,8 @@
                         <div>
                             <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Route Pacific</h4>
                             <div class="flex items-center gap-2 text-[#00095B]">
-                                <i data-lucide="ship" class="w-4 h-4"></i>
-                                <span class="text-sm font-bold">ONE Apus</span>
+                                <i data-lucide="package-check" class="w-4 h-4"></i>
+                                <span class="text-sm font-bold">Dash Displays (Visteon)</span>
                             </div>
                         </div>
                         <div class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded">ON TIME</div>
@@ -198,19 +194,19 @@
                     </div>
                 </div>
 
-                <!-- Rotterdam Alert -->
+                <!-- Critical Alert -->
                 <div onclick="openModal('critical')" class="bg-red-50 p-4 rounded-lg border border-red-100 shadow-sm flex flex-col justify-between hover:border-red-200 transition-colors cursor-pointer">
                     <div class="flex items-start gap-3">
-                        <i data-lucide="alert-circle" class="w-5 h-5 text-[#D92C25] shrink-0"></i>
+                        <i data-lucide="alert-octagon" class="w-5 h-5 text-[#D92C25] shrink-0"></i>
                         <div>
-                            <h4 class="text-sm font-bold text-[#D92C25] leading-tight">Rotterdam Strike Update</h4>
-                            <p class="text-xs text-red-700 mt-1">Negotiations stalled. 48hr delay confirmed for incoming freight.</p>
+                            <h4 class="text-sm font-bold text-[#D92C25] leading-tight">King Ranch Leather Delay</h4>
+                            <p class="text-xs text-red-700 mt-1">Shipment #9910 held at Rotterdam. Line impact expected in 48h.</p>
                         </div>
                     </div>
                     <div class="mt-3 flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-red-400 uppercase">Updated 10m ago</span>
+                        <span class="text-[10px] font-bold text-red-400 uppercase">Supplier: Lear Corp</span>
                         <span class="text-xs font-bold text-[#D92C25] flex items-center gap-1 group">
-                            View Plan <span class="group-hover:translate-x-1 transition-transform">→</span>
+                            Resolve <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </span>
                     </div>
                 </div>
@@ -221,57 +217,55 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. DATA CONFIGURATION ---
+        // --- 1. DATA CONFIGURATION (TACTICAL / PERSONALIZED) ---
         const locations = [
-            { id: 1, name: 'Dearborn HQ', x: 26, y: 34, status: 'normal' },
-            { id: 2, name: 'Valencia Plant', x: 48, y: 35, status: 'normal' },
-            { id: 3, name: 'Silverton Assembly', x: 55, y: 80, status: 'normal' },
-            { id: 4, name: 'Changan Ford', x: 78, y: 40, status: 'normal' },
-            { id: 5, name: 'San Luis Potosi', x: 22, y: 46, status: 'normal' },
-            { id: 6, name: 'Chennai Plant', x: 68, y: 54, status: 'normal' },
-            { id: 7, name: 'Cologne Body & Assembly', x: 50, y: 30, status: 'normal' },
+            { id: 1, name: 'Dearborn Assembly (My Plant)', x: 26, y: 34, status: 'destination' }, // Destination
+            { id: 2, name: 'Lear Corp (Spain) - Leather', x: 48, y: 35, status: 'normal' },
+            { id: 3, name: 'Yanfeng (South Africa) - Interiors', x: 55, y: 80, status: 'normal' },
+            { id: 4, name: 'Visteon (China) - Electronics', x: 78, y: 40, status: 'normal' },
+            { id: 5, name: 'Magna (Mexico) - Seating', x: 22, y: 46, status: 'normal' },
             { 
                 id: 99, 
-                name: 'Rotterdam Port', 
+                name: 'Rotterdam Port (Held)', 
                 x: 49, y: 30, 
                 status: 'critical',
-                alert: { title: 'Port Strike Alert', time: '48hr Delay', impact: 'Raw Materials B' }
+                alert: { title: 'Shipment Held', time: '48hr Delay', impact: 'Part: King Ranch Leather' }
             },
         ];
 
         const kpiData = {
             onTime: {
-                title: "On Time Shipments",
+                title: "Active Purchase Orders",
                 class: "bg-green-50 border-green-100 text-green-700",
                 items: [
-                    { id: "SH-2024-001", main: "Shanghai -> Long Beach", sub: "Electronics", status: "On Schedule" },
-                    { id: "SH-2024-002", main: "Hamburg -> Newark", sub: "Powertrain Components", status: "On Schedule" },
-                    { id: "SH-2024-003", main: "Busan -> Seattle", sub: "Body Panels", status: "Arriving Early" }
+                    { id: "PO-55291", main: "Visteon -> Dearborn", sub: "10k Instrument Clusters", status: "On Schedule" },
+                    { id: "PO-55294", main: "Magna -> Dearborn", sub: "5k Seat Foam Sets", status: "On Schedule" },
+                    { id: "PO-55301", main: "Yanfeng -> Dearborn", sub: "2k Door Panels (XLT)", status: "Arriving Early" }
                 ]
             },
             inTransit: {
-                title: "Active Transit",
+                title: "Inbound Freight (Your Parts)",
                 class: "bg-blue-50 border-blue-100 text-blue-700",
                 items: [
-                    { id: "TR-8821", main: "HMM Algeciras", sub: "Atlantic Route A", status: "ETA: 2 days" },
-                    { id: "TR-9923", main: "ONE Apus", sub: "Pacific Route B", status: "ETA: 5 days" },
-                    { id: "TR-7712", main: "Ever Given", sub: "Suez Canal", status: "ETA: 12 days" }
+                    { id: "TR-8821", main: "HMM Algeciras", sub: "Contains: Seat Foam Pallets", status: "ETA: 2 days" },
+                    { id: "TR-9923", main: "ONE Apus", sub: "Contains: Dash Screens", status: "ETA: 5 days" },
+                    { id: "TR-7712", main: "Ever Given", sub: "Contains: Plastic Fasteners", status: "ETA: 12 days" }
                 ]
             },
             atRisk: {
-                title: "At Risk / Warning",
+                title: "Exceptions / Warnings",
                 class: "bg-orange-50 border-orange-100 text-orange-700",
                 items: [
-                    { id: "AR-101", main: "Taiwan Strait", sub: "Weather Delay", status: "+12h ETA", alert: true },
-                    { id: "AR-102", main: "Veracruz Port", sub: "Customs Hold", status: "Pending Release", alert: true },
-                    { id: "AR-103", main: "Rail Line B", sub: "Maintenance", status: "+6h Delay", alert: true }
+                    { id: "EX-101", main: "Fastener Shipment", sub: "Weather Delay (Taiwan)", status: "+12h ETA", alert: true },
+                    { id: "EX-102", main: "Door Clips", sub: "Customs Hold (Veracruz)", status: "Pending Release", alert: true },
+                    { id: "EX-103", main: "Rail Car #8892", sub: "Maintenance Delay", status: "+6h Delay", alert: true }
                 ]
             },
             critical: {
-                title: "Critical Disruptions",
+                title: "Critical Line Stoppages",
                 class: "bg-red-50 border-red-100 text-red-700",
                 items: [
-                    { id: "CR-99", main: "Rotterdam Port", sub: "Labor Strike (Active)", status: "48h Stoppage", critical: true }
+                    { id: "CR-99", main: "Rotterdam Strike", sub: "Part: King Ranch Leather Hides", status: "Line Impact: 48hrs", critical: true }
                 ]
             }
         };
@@ -290,7 +284,6 @@
                 el.innerHTML = `
                     <div class="relative">
                         <span class="absolute -inset-4 rounded-full border border-red-500/50 opacity-0 animate-ping"></span>
-                        <span class="absolute -inset-8 rounded-full border border-red-500/30 opacity-0 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></span>
                         <div class="relative flex items-center justify-center w-8 h-8 bg-[#D92C25] rounded-full shadow-[0_0_15px_rgba(217,44,37,0.8)] border border-white/20 text-white z-20 hover:scale-110 transition-transform">
                             <i data-lucide="anchor" class="w-4 h-4"></i>
                         </div>
@@ -299,8 +292,8 @@
                         <div class="pin-tooltip hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 z-50">
                             <div class="bg-slate-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-red-500/50 overflow-hidden text-white zoom-in">
                                 <div class="bg-gradient-to-r from-[#D92C25] to-red-900 px-4 py-2 flex justify-between items-center">
-                                    <div class="flex items-center gap-2"><i data-lucide="activity" class="w-3 h-3 text-white animate-pulse"></i><span class="text-xs font-bold uppercase">Active Alert</span></div>
-                                    <span class="text-[10px] font-mono bg-black/20 px-2 py-0.5 rounded">ERR_99</span>
+                                    <div class="flex items-center gap-2"><i data-lucide="siren" class="w-3 h-3 text-white animate-pulse"></i><span class="text-xs font-bold uppercase">Action Req</span></div>
+                                    <span class="text-[10px] font-mono bg-black/20 px-2 py-0.5 rounded">PO-9910</span>
                                 </div>
                                 <div class="p-4">
                                     <h4 class="font-bold mb-1">${loc.alert.title}</h4>
@@ -312,12 +305,25 @@
                         </div>
                     </div>
                 `;
+            } else if (loc.status === 'destination') {
+                // Destination Pin (Dearborn)
+                 el.innerHTML = `
+                    <div class="group relative flex items-center justify-center">
+                        <div class="w-4 h-4 bg-[#00095B] border-2 border-white rounded-full shadow-lg z-10 flex items-center justify-center">
+                             <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                        </div>
+                        <div class="absolute top-6 left-1/2 -translate-x-1/2 opacity-100 transition-all pointer-events-none whitespace-nowrap">
+                           <div class="bg-[#00095B] text-white text-[10px] px-2 py-1 rounded shadow-lg font-bold tracking-wide">
+                              MY PLANT
+                           </div>
+                        </div>
+                    </div>
+                `;
             } else {
-                // Normal Pin HTML
+                // Supplier Pin
                 el.innerHTML = `
                     <div class="group relative flex items-center justify-center">
                         <div class="w-2 h-2 bg-[#4ade80] rounded-full shadow-[0_0_10px_#4ade80] z-10"></div>
-                        <div class="absolute w-4 h-4 bg-[#4ade80] rounded-full opacity-20 animate-pulse"></div>
                         <div class="absolute top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap">
                            <div class="bg-slate-900 text-white text-[10px] px-2 py-1 rounded border border-slate-700 shadow-xl font-medium tracking-wide">
                               ${loc.name}
