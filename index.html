@@ -3,387 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ford Logistics - Planner View</title>
+    <title>Ford Planner - Compact List</title>
     
-    <!-- Tailwind CSS (Styling) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Lucide Icons (Visuals) -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Custom Styles for Animations -->
     <style>
+        /* Custom Scrollbar for compact spaces */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
         .fade-in { animation: fadeIn 0.2s ease-out; }
-        .slide-in { animation: slideIn 0.3s ease-out; }
-        .zoom-in { animation: zoomIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        /* Map Pin Hover Effects */
-        .pin-container:hover .pin-tooltip { display: block; }
+        .selected-nav { background-color: #f1f5f9; border-left: 3px solid #00095B; }
+        .nav-item { border-left: 3px solid transparent; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 p-4 md:p-8 min-h-screen">
+<body class="bg-slate-100 font-sans text-slate-800 p-4 min-h-screen flex items-center justify-center">
 
-    <!-- Dashboard Container -->
-    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-slate-200 relative">
+    <!-- WIDGET CONTAINER 
+         - max-w-3xl: Matches your "Global Team Sync" widget width
+         - h-[320px]: Fixed compact height (approx 300px min)
+    -->
+    <div class="w-full max-w-3xl bg-white rounded-lg shadow-sm border border-slate-200 flex overflow-hidden h-[320px]">
         
-        <!-- KPI Strip -->
-        <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100 border-b border-slate-100 bg-white">
+        <!-- LEFT SIDEBAR: Navigation (Narrower: w-52 / ~200px) -->
+        <div class="w-52 bg-white border-r border-slate-100 flex flex-col shrink-0 z-10">
             
-            <!-- KPI: Active POs -->
-            <div onclick="openModal('onTime')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group hover:bg-slate-50">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-green-50 border-green-100 text-green-600 group-hover:bg-green-100 transition-colors">
-                    <i data-lucide="file-check" class="w-6 h-6"></i>
+            <!-- Compact Header -->
+            <div class="p-3 border-b border-slate-100 bg-slate-50/50">
+                <div class="flex items-center gap-1.5 mb-0.5">
+                    <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-[#00095B]"></i>
+                    <h2 class="text-xs font-bold text-[#00095B] uppercase tracking-wide">Hot List</h2>
                 </div>
-                <div>
-                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">Active POs</p>
-                    <p class="text-2xl font-bold text-slate-800">124</p>
-                </div>
+                <p class="text-[10px] text-slate-500 font-medium truncate">User: 882 • Interior Trim</p>
             </div>
 
-            <!-- KPI: In Transit -->
-            <div onclick="openModal('inTransit')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group hover:bg-slate-50">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-blue-50 border-blue-100 text-[#2D96CD] group-hover:bg-blue-100 transition-colors">
-                    <i data-lucide="container" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">In Transit</p>
-                    <p class="text-2xl font-bold text-slate-800">18</p>
-                </div>
-            </div>
+            <!-- Compact Nav Items -->
+            <div class="flex-1 overflow-y-auto custom-scroll p-1.5 space-y-0.5">
+                
+                <button onclick="filterList('critical')" id="btn-critical" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="siren" class="w-3.5 h-3.5 text-red-600"></i>
+                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-red-700">Line Stop</span>
+                    </div>
+                    <span class="bg-red-100 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">1</span>
+                </button>
 
-            <!-- KPI: Exceptions -->
-            <div onclick="openModal('atRisk')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group hover:bg-slate-50">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-orange-50 border-orange-100 text-orange-600 group-hover:bg-orange-100 transition-colors">
-                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <p class="text-[11px] text-slate-400 uppercase tracking-widest font-bold group-hover:text-slate-600 transition-colors">Exceptions</p>
-                    <p class="text-2xl font-bold text-slate-800">3</p>
-                </div>
-            </div>
+                <button onclick="filterList('atRisk')" id="btn-atRisk" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-orange-500"></i>
+                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-orange-600">Exceptions</span>
+                    </div>
+                    <span class="bg-orange-100 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                </button>
 
-            <!-- KPI: Critical Line Stop -->
-            <div onclick="openModal('critical')" class="p-5 flex items-center gap-4 transition-all cursor-pointer group bg-red-50/30 hover:bg-red-50/50 border-l-4 border-l-[#D92C25] md:border-l-0">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center border bg-red-100 border-red-200 text-[#D92C25] animate-pulse">
-                    <i data-lucide="siren" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <p class="text-[11px] text-[#D92C25] uppercase tracking-widest font-bold">Line Stop Risk</p>
-                    <p class="text-2xl font-bold text-[#D92C25]">1</p>
-                </div>
+                <button onclick="filterList('inTransit')" id="btn-inTransit" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="container" class="w-3.5 h-3.5 text-[#2D96CD]"></i>
+                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-[#2D96CD]">Freight</span>
+                    </div>
+                    <span class="bg-blue-50 text-blue-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">18</span>
+                </button>
+                
+                 <button onclick="filterList('onTime')" id="btn-onTime" class="nav-item w-full text-left p-2 rounded hover:bg-slate-50 transition-all group flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="file-check" class="w-3.5 h-3.5 text-green-600"></i>
+                        <span class="text-[11px] font-bold text-slate-700 group-hover:text-green-600">Active POs</span>
+                    </div>
+                    <span class="bg-slate-100 text-slate-600 text-[9px] font-bold px-1.5 py-0.5 rounded-full">124</span>
+                </button>
+            </div>
+            
+            <!-- Tiny Footer -->
+            <div class="p-2 border-t border-slate-100 bg-slate-50/50 text-center">
+                <button class="text-[10px] font-medium text-[#00095B] hover:underline flex items-center justify-center gap-1 w-full">
+                    CMMS <i data-lucide="external-link" class="w-3 h-3"></i>
+                </button>
             </div>
         </div>
 
-        <!-- Details Modal (Hidden by default) -->
-        <div id="kpiModal" class="hidden absolute top-[88px] left-0 right-0 bottom-0 z-50 bg-slate-900/10 backdrop-blur-sm p-4 flex justify-end fade-in">
-            <div class="bg-white w-full max-w-md h-full rounded-xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden slide-in">
-                <!-- Header -->
-                <div id="modalHeader" class="px-6 py-4 border-b flex justify-between items-center bg-slate-50">
-                    <div>
-                        <h3 id="modalTitle" class="font-bold text-lg text-slate-700">Category Title</h3>
-                        <p class="text-xs text-slate-500 mt-1">Filtered by: <span class="font-mono bg-slate-200 px-1 rounded">USER_ID_882</span></p>
-                    </div>
-                    <button onclick="closeModal()" class="p-2 hover:bg-white/50 rounded-full transition-colors">
-                        <i data-lucide="x" class="w-5 h-5 text-slate-500"></i>
+        <!-- RIGHT PANE: Content List -->
+        <div class="flex-1 bg-white flex flex-col min-w-0">
+            
+            <!-- Compact Header -->
+            <div class="h-10 border-b border-slate-100 px-4 flex justify-between items-center bg-white sticky top-0 z-20">
+                <div class="flex items-baseline gap-2 overflow-hidden">
+                    <h3 id="list-title" class="font-bold text-slate-800 text-xs whitespace-nowrap">Critical Items</h3>
+                    <p id="list-subtitle" class="text-[10px] text-slate-400 truncate">High priority shortages</p>
+                </div>
+                <div class="flex gap-1 shrink-0">
+                    <button class="p-1 text-slate-400 hover:text-[#00095B] hover:bg-slate-100 rounded" title="Export">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button class="p-1 text-slate-400 hover:text-[#00095B] hover:bg-slate-100 rounded" title="Refresh">
+                        <i data-lucide="refresh-ccw" class="w-3.5 h-3.5"></i>
                     </button>
                 </div>
-                <!-- Content List -->
-                <div id="modalContent" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
-                    <!-- Javascript will inject items here -->
-                </div>
-                <!-- Footer -->
-                <div class="p-4 bg-white border-t border-slate-100">
-                    <button onclick="closeModal()" class="w-full py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
-                        Close Panel
-                    </button>
-                </div>
+            </div>
+
+            <!-- List Content -->
+            <div id="list-container" class="flex-1 overflow-y-auto custom-scroll p-2 space-y-2 bg-slate-50/30">
+                <!-- Content injected via JS -->
             </div>
         </div>
-
-        <!-- Main Content Area -->
-        <main class="p-6 relative bg-slate-50">
-            
-            <div class="flex justify-between items-end mb-4">
-                <div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <i data-lucide="clipboard-list" class="w-4 h-4 text-[#2D96CD]"></i>
-                        <h2 class="text-lg font-bold text-[#00095B] tracking-tight">My Watchlist: F-150 Interior Trim</h2>
-                    </div>
-                    <p class="text-xs text-slate-500 font-medium">Tracking your managed suppliers and inbound freight.</p>
-                </div>
-                
-                <!-- Legend -->
-                <div class="flex gap-3">
-                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md shadow-sm border border-slate-200">
-                        <span class="w-2 h-2 rounded-full bg-[#3E8D62] shadow-[0_0_8px_rgba(62,141,98,0.6)]"></span> 
-                        <span class="text-xs font-semibold text-slate-600">On Track</span>
-                    </div>
-                    <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md shadow-sm border border-slate-200">
-                        <span class="w-2 h-2 rounded-full bg-[#D92C25] animate-pulse shadow-[0_0_8px_rgba(217,44,37,0.6)]"></span> 
-                        <span class="text-xs font-semibold text-slate-600">Requires Action</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAP WIDGET CONTAINER -->
-            <div class="relative w-full aspect-[21/9] bg-[#020617] rounded-xl overflow-hidden shadow-2xl border border-slate-700 group isolation-auto" id="mapContainer">
-                
-                <!-- 1. Base Map Image -->
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Aurora_as_seen_by_IMAGE.jpg/1280px-Aurora_as_seen_by_IMAGE.jpg'); background-size: 110% 110%; background-position: center 40%; filter: grayscale(30%) brightness(50%) contrast(110%) hue-rotate(190deg) saturate(150%);"></div>
-
-                <!-- 2. Overlay -->
-                <div class="absolute inset-0 bg-[#00095B] mix-blend-color opacity-40"></div>
-                
-                <!-- 3. Grid -->
-                <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px); background-size: 60px 60px;"></div>
-
-                <!-- 4. Shipping Lanes (SVG) -->
-                <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-30">
-                    <path d="M 28% 35% Q 38% 30% 49% 30%" fill="none" stroke="#2D96CD" stroke-width="1" stroke-dasharray="4 4" />
-                    <path d="M 78% 40% Q 95% 35% 99% 35%" fill="none" stroke="#2D96CD" stroke-width="1" stroke-dasharray="4 4" />
-                    <path d="M 0% 35% Q 10% 35% 26% 35%" fill="none" stroke="#2D96CD" stroke-width="1" stroke-dasharray="4 4" />
-                </svg>
-
-                <!-- PINS WILL BE INJECTED HERE VIA JS -->
-                <div id="pinsLayer"></div>
-
-                <!-- Map UI -->
-                <div class="absolute bottom-4 left-6 text-white/50 font-mono text-[10px]">
-                    DESTINATION: DEARBORN ASSEMBLY
-                </div>
-            </div>
-            
-            <!-- Map Footer Cards -->
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                
-                <!-- Atlantic Route -->
-                <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Route Atlantic</h4>
-                            <div class="flex items-center gap-2 text-[#00095B]">
-                                <i data-lucide="package-check" class="w-4 h-4"></i>
-                                <span class="text-sm font-bold">Seat Foam (Magna)</span>
-                            </div>
-                        </div>
-                        <div class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded">ON TIME</div>
-                    </div>
-                    <div class="mt-3 w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                        <div class="bg-[#2D96CD] h-full w-[70%] group-hover:animate-pulse"></div>
-                    </div>
-                </div>
-
-                <!-- Pacific Route -->
-                <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Route Pacific</h4>
-                            <div class="flex items-center gap-2 text-[#00095B]">
-                                <i data-lucide="package-check" class="w-4 h-4"></i>
-                                <span class="text-sm font-bold">Dash Displays (Visteon)</span>
-                            </div>
-                        </div>
-                        <div class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded">ON TIME</div>
-                    </div>
-                    <div class="mt-3 w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                        <div class="bg-[#2D96CD] h-full w-[45%] group-hover:animate-pulse"></div>
-                    </div>
-                </div>
-
-                <!-- Critical Alert -->
-                <div onclick="openModal('critical')" class="bg-red-50 p-4 rounded-lg border border-red-100 shadow-sm flex flex-col justify-between hover:border-red-200 transition-colors cursor-pointer">
-                    <div class="flex items-start gap-3">
-                        <i data-lucide="alert-octagon" class="w-5 h-5 text-[#D92C25] shrink-0"></i>
-                        <div>
-                            <h4 class="text-sm font-bold text-[#D92C25] leading-tight">King Ranch Leather Delay</h4>
-                            <p class="text-xs text-red-700 mt-1">Shipment #9910 held at Rotterdam. Line impact expected in 48h.</p>
-                        </div>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-red-400 uppercase">Supplier: Lear Corp</span>
-                        <span class="text-xs font-bold text-[#D92C25] flex items-center gap-1 group">
-                            Resolve <span class="group-hover:translate-x-1 transition-transform">→</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-        </main>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. DATA CONFIGURATION (TACTICAL / PERSONALIZED) ---
-        const locations = [
-            { id: 1, name: 'Dearborn Assembly (My Plant)', x: 26, y: 34, status: 'destination' }, // Destination
-            { id: 2, name: 'Lear Corp (Spain) - Leather', x: 48, y: 35, status: 'normal' },
-            { id: 3, name: 'Yanfeng (South Africa) - Interiors', x: 55, y: 80, status: 'normal' },
-            { id: 4, name: 'Visteon (China) - Electronics', x: 78, y: 40, status: 'normal' },
-            { id: 5, name: 'Magna (Mexico) - Seating', x: 22, y: 46, status: 'normal' },
-            { 
-                id: 99, 
-                name: 'Rotterdam Port (Held)', 
-                x: 49, y: 30, 
-                status: 'critical',
-                alert: { title: 'Shipment Held', time: '48hr Delay', impact: 'Part: King Ranch Leather' }
-            },
-        ];
-
-        const kpiData = {
-            onTime: {
-                title: "Active Purchase Orders",
-                class: "bg-green-50 border-green-100 text-green-700",
+        // --- DATA ---
+        const listData = {
+            critical: {
+                title: "Line Stoppage Risks",
+                subtitle: "Immediate action required",
                 items: [
-                    { id: "PO-55291", main: "Visteon -> Dearborn", sub: "10k Instrument Clusters", status: "On Schedule" },
-                    { id: "PO-55294", main: "Magna -> Dearborn", sub: "5k Seat Foam Sets", status: "On Schedule" },
-                    { id: "PO-55301", main: "Yanfeng -> Dearborn", sub: "2k Door Panels (XLT)", status: "Arriving Early" }
-                ]
-            },
-            inTransit: {
-                title: "Inbound Freight (Your Parts)",
-                class: "bg-blue-50 border-blue-100 text-blue-700",
-                items: [
-                    { id: "TR-8821", main: "HMM Algeciras", sub: "Contains: Seat Foam Pallets", status: "ETA: 2 days" },
-                    { id: "TR-9923", main: "ONE Apus", sub: "Contains: Dash Screens", status: "ETA: 5 days" },
-                    { id: "TR-7712", main: "Ever Given", sub: "Contains: Plastic Fasteners", status: "ETA: 12 days" }
+                    { 
+                        id: "PO-9910", 
+                        part: "King Ranch Leather Hides", 
+                        supplier: "Lear Corp (Spain)", 
+                        status: "HELD - ROTTERDAM", 
+                        impact: "Line Stop: 48hrs",
+                        color: "red"
+                    }
                 ]
             },
             atRisk: {
-                title: "Exceptions / Warnings",
-                class: "bg-orange-50 border-orange-100 text-orange-700",
+                title: "Exceptions",
+                subtitle: "Delays & Customs Holds",
                 items: [
-                    { id: "EX-101", main: "Fastener Shipment", sub: "Weather Delay (Taiwan)", status: "+12h ETA", alert: true },
-                    { id: "EX-102", main: "Door Clips", sub: "Customs Hold (Veracruz)", status: "Pending Release", alert: true },
-                    { id: "EX-103", main: "Rail Car #8892", sub: "Maintenance Delay", status: "+6h Delay", alert: true }
+                    { 
+                        id: "SH-102", 
+                        part: "Plastic Door Clips", 
+                        supplier: "ABC Fasteners", 
+                        status: "Weather Delay (+12h)", 
+                        impact: "Low Stock",
+                        color: "orange"
+                    },
+                    { 
+                        id: "SH-105", 
+                        part: "Rear Seat Frames", 
+                        supplier: "Magna Seating", 
+                        status: "Customs Hold", 
+                        impact: "ETA: Pending",
+                        color: "orange"
+                    },
+                     { 
+                        id: "RL-882", 
+                        part: "Chassis Mounts", 
+                        supplier: "Metalsa", 
+                        status: "Maintenance", 
+                        impact: "ETA: +6h",
+                        color: "orange"
+                    }
                 ]
             },
-            critical: {
-                title: "Critical Line Stoppages",
-                class: "bg-red-50 border-red-100 text-red-700",
+            inTransit: {
+                title: "Inbound Freight",
+                subtitle: "ETA < 7 days",
                 items: [
-                    { id: "CR-99", main: "Rotterdam Strike", sub: "Part: King Ranch Leather Hides", status: "Line Impact: 48hrs", critical: true }
+                    { 
+                        id: "TR-8821", 
+                        part: "Seat Foam Pallets (500)", 
+                        supplier: "Magna", 
+                        status: "HMM Algeciras", 
+                        impact: "ETA: 2 Days",
+                        color: "blue"
+                    },
+                    { 
+                        id: "TR-9923", 
+                        part: "Dash Screens (12-inch)", 
+                        supplier: "Visteon", 
+                        status: "ONE Apus", 
+                        impact: "ETA: 5 Days",
+                        color: "blue"
+                    },
+                    { 
+                        id: "TR-4412", 
+                        part: "Center Console Trim", 
+                        supplier: "Yanfeng", 
+                        status: "Customs Cleared", 
+                        impact: "ETA: 1 Day",
+                        color: "blue"
+                    },
+                    { 
+                        id: "TR-5501", 
+                        part: "Wiring Harness A", 
+                        supplier: "Aptiv", 
+                        status: "Rail - Chicago", 
+                        impact: "ETA: 3 Days",
+                        color: "blue"
+                    }
+                ]
+            },
+            onTime: {
+                title: "Active POs",
+                subtitle: "Standard flow",
+                items: [
+                     { id: "PO-55291", part: "Instrument Clusters", supplier: "Visteon", status: "Production", impact: "On Schedule", color: "green" },
+                     { id: "PO-55294", part: "Door Panels (XLT)", supplier: "Yanfeng", status: "Shipped", impact: "On Schedule", color: "green" },
+                     { id: "PO-55298", part: "Carpet Sets", supplier: "IAC Group", status: "Production", impact: "On Schedule", color: "green" },
+                     { id: "PO-55301", part: "Headliners", supplier: "Grupo Antolin", status: "Staging", impact: "On Schedule", color: "green" },
+                     { id: "PO-55310", part: "Pillar Trim A/B", supplier: "Yanfeng", status: "Production", impact: "On Schedule", color: "green" }
                 ]
             }
         };
 
-        // --- 2. RENDER PINS ---
-        const pinsLayer = document.getElementById('pinsLayer');
-        
-        locations.forEach(loc => {
-            const el = document.createElement('div');
-            el.className = "absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 pin-container";
-            el.style.left = `${loc.x}%`;
-            el.style.top = `${loc.y}%`;
+        // --- RENDER FUNCTION ---
+        function filterList(category) {
+            const data = listData[category];
+            const container = document.getElementById('list-container');
+            const titleEl = document.getElementById('list-title');
+            const subtitleEl = document.getElementById('list-subtitle');
+            
+            // Update Header
+            titleEl.textContent = data.title;
+            subtitleEl.textContent = data.subtitle;
 
-            if (loc.status === 'critical') {
-                // Critical Pin HTML
-                el.innerHTML = `
-                    <div class="relative">
-                        <span class="absolute -inset-4 rounded-full border border-red-500/50 opacity-0 animate-ping"></span>
-                        <div class="relative flex items-center justify-center w-8 h-8 bg-[#D92C25] rounded-full shadow-[0_0_15px_rgba(217,44,37,0.8)] border border-white/20 text-white z-20 hover:scale-110 transition-transform">
-                            <i data-lucide="anchor" class="w-4 h-4"></i>
+            // Update Navigation Styles
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('selected-nav');
+                el.classList.add('border-transparent');
+            });
+            const activeBtn = document.getElementById(`btn-${category}`);
+            activeBtn.classList.add('selected-nav');
+            activeBtn.classList.remove('border-transparent');
+
+            // Render Items
+            container.innerHTML = data.items.map((item, index) => {
+                let badgeClass = "";
+                let icon = "";
+                
+                if (item.color === 'red') {
+                    badgeClass = "bg-red-50 text-red-700 border-red-100";
+                    icon = "siren";
+                } else if (item.color === 'orange') {
+                    badgeClass = "bg-orange-50 text-orange-700 border-orange-100";
+                    icon = "alert-circle";
+                } else if (item.color === 'blue') {
+                    badgeClass = "bg-blue-50 text-blue-700 border-blue-100";
+                    icon = "ship";
+                } else {
+                    badgeClass = "bg-green-50 text-green-700 border-green-100";
+                    icon = "check-circle-2";
+                }
+
+                return `
+                <div class="bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:shadow-md transition-all fade-in flex items-center justify-between group cursor-pointer" style="animation-delay: ${index * 0.05}s">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <div class="mt-0.5 p-1.5 rounded-full ${badgeClass} border shrink-0">
+                            <i data-lucide="${icon}" class="w-3 h-3"></i>
                         </div>
-                        
-                        <!-- Tooltip -->
-                        <div class="pin-tooltip hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 z-50">
-                            <div class="bg-slate-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-red-500/50 overflow-hidden text-white zoom-in">
-                                <div class="bg-gradient-to-r from-[#D92C25] to-red-900 px-4 py-2 flex justify-between items-center">
-                                    <div class="flex items-center gap-2"><i data-lucide="siren" class="w-3 h-3 text-white animate-pulse"></i><span class="text-xs font-bold uppercase">Action Req</span></div>
-                                    <span class="text-[10px] font-mono bg-black/20 px-2 py-0.5 rounded">PO-9910</span>
-                                </div>
-                                <div class="p-4">
-                                    <h4 class="font-bold mb-1">${loc.alert.title}</h4>
-                                    <p class="text-xs text-red-200 mb-3">${loc.alert.time} • ${loc.alert.impact}</p>
-                                    <button onclick="event.stopPropagation(); openModal('critical')" class="w-full bg-white text-[#00095B] text-xs font-bold py-2 rounded">VIEW MANIFEST</button>
-                                </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <h4 class="font-bold text-xs text-slate-800 truncate">${item.part}</h4>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-500 px-1 rounded shrink-0">${item.id}</span>
                             </div>
-                            <div class="w-px h-4 bg-red-500 absolute left-1/2 -translate-x-1/2 -bottom-4"></div>
+                            <div class="flex items-center gap-2 text-[10px] text-slate-500">
+                                <span class="truncate">${item.supplier}</span>
+                                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                                <span class="font-medium ${item.color === 'red' ? 'text-red-600' : 'text-slate-600'} truncate">
+                                    ${item.status}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                `;
-            } else if (loc.status === 'destination') {
-                // Destination Pin (Dearborn)
-                 el.innerHTML = `
-                    <div class="group relative flex items-center justify-center">
-                        <div class="w-4 h-4 bg-[#00095B] border-2 border-white rounded-full shadow-lg z-10 flex items-center justify-center">
-                             <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
-                        </div>
-                        <div class="absolute top-6 left-1/2 -translate-x-1/2 opacity-100 transition-all pointer-events-none whitespace-nowrap">
-                           <div class="bg-[#00095B] text-white text-[10px] px-2 py-1 rounded shadow-lg font-bold tracking-wide">
-                              MY PLANT
-                           </div>
-                        </div>
+                    
+                    <div class="text-right flex flex-col items-end gap-1 shrink-0 pl-2">
+                         <span class="text-[9px] font-bold uppercase tracking-wide ${item.color === 'red' ? 'text-red-600 bg-red-50 px-1.5 py-0.5 rounded' : 'text-slate-400'}">
+                            ${item.impact}
+                         </span>
+                         <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-300 group-hover:text-[#00095B] transition-colors"></i>
                     </div>
-                `;
-            } else {
-                // Supplier Pin
-                el.innerHTML = `
-                    <div class="group relative flex items-center justify-center">
-                        <div class="w-2 h-2 bg-[#4ade80] rounded-full shadow-[0_0_10px_#4ade80] z-10"></div>
-                        <div class="absolute top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap">
-                           <div class="bg-slate-900 text-white text-[10px] px-2 py-1 rounded border border-slate-700 shadow-xl font-medium tracking-wide">
-                              ${loc.name}
-                           </div>
-                        </div>
-                    </div>
-                `;
-            }
-            pinsLayer.appendChild(el);
-        });
-
-        // --- 3. MODAL LOGIC ---
-        function openModal(category) {
-            const modal = document.getElementById('kpiModal');
-            const data = kpiData[category];
-            const contentDiv = document.getElementById('modalContent');
-            const headerDiv = document.getElementById('modalHeader');
-            
-            // Set Header Styling
-            headerDiv.className = `px-6 py-4 border-b flex justify-between items-center ${data.class.replace('text-', 'border-').split(' ')[0]}`; // quick hack to get bg color from class string
-            document.getElementById('modalTitle').textContent = data.title;
-            document.getElementById('modalTitle').className = `font-bold text-lg ${data.class.split(' ').pop()}`; // get text color
-
-            // Generate List Items
-            contentDiv.innerHTML = data.items.map(item => `
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">${item.id}</span>
-                        ${item.critical ? '<span class="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded uppercase">Action Req</span>' : ''}
-                        ${item.alert ? '<span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-0.5 rounded uppercase">Warning</span>' : ''}
-                    </div>
-                    <div class="mb-2">
-                        <h4 class="font-semibold text-slate-800 text-sm">${item.main}</h4>
-                        <p class="text-xs text-slate-500">${item.sub}</p>
-                    </div>
-                    <div class="flex items-center gap-3 mt-3 pt-3 border-t border-slate-50">
-                        <div class="flex items-center gap-1.5">
-                            <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
-                            <span class="text-xs font-medium text-slate-700">${item.status}</span>
-                        </div>
-                    </div>
-                    <button class="w-full mt-3 text-xs font-medium py-2 rounded bg-slate-50 text-slate-600 hover:bg-[#00095B] hover:text-white transition-colors flex items-center justify-center gap-2">
-                        View Manifest <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                    </button>
                 </div>
-            `).join('');
-
-            // Show Modal
-            modal.classList.remove('hidden');
+                `;
+            }).join('');
             
-            // Re-initialize icons for new content
             lucide.createIcons();
         }
 
-        function closeModal() {
-            document.getElementById('kpiModal').classList.add('hidden');
-        }
-
-        // Initialize Icons on Load
-        lucide.createIcons();
+        // Initialize with Critical items
+        filterList('critical');
     </script>
 </body>
 </html>
