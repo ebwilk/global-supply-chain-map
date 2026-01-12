@@ -23,9 +23,12 @@
         
         .selected-nav { background-color: #f1f5f9; border-left: 3px solid #00095B; }
         .nav-item { border-left: 3px solid transparent; }
+
+        /* Transparent background for embedding */
+        body { background-color: transparent; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 p-4 min-h-screen flex items-center justify-center">
+<body class="font-sans text-slate-800 p-4 min-h-screen flex items-center justify-center">
 
     <!-- WIDGET CONTAINER 
          - max-w-3xl: Matches your "Global Team Sync" widget width
@@ -109,7 +112,7 @@
             </div>
 
             <!-- List Content -->
-            <div id="list-container" class="flex-1 overflow-y-auto custom-scroll p-2 space-y-2 bg-slate-50/30">
+            <div id="list-container" class="flex-1 overflow-y-auto custom-scroll p-2 space-y-2">
                 <!-- Content injected via JS -->
             </div>
         </div>
